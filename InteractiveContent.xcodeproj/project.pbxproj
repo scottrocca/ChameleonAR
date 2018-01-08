@@ -13,6 +13,10 @@
 		616B72BD1FF8AF3800C942C0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 616B72BC1FF8AF3800C942C0 /* Assets.xcassets */; };
 		616B72C01FF8AF3800C942C0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 616B72BE1FF8AF3800C942C0 /* LaunchScreen.storyboard */; };
 		616B72C31FF8AF3800C942C0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 616B72C21FF8AF3800C942C0 /* main.m */; };
+		616B72CC1FF8AFA300C942C0 /* Chameleon.m in Sources */ = {isa = PBXBuildFile; fileRef = 616B72CB1FF8AFA300C942C0 /* Chameleon.m */; };
+		616B72CF1FFC175A00C942C0 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 616B72CE1FFC175A00C942C0 /* art.scnassets */; };
+		616B72D31FFC6DB300C942C0 /* ARSCNView+HPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 616B72D21FFC6DB300C942C0 /* ARSCNView+HPAdditions.m */; };
+		616B72D61FFC761300C942C0 /* UIImage+HPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 616B72D51FFC761300C942C0 /* UIImage+HPAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +30,13 @@
 		616B72BF1FF8AF3800C942C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		616B72C11FF8AF3800C942C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		616B72C21FF8AF3800C942C0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		616B72CA1FF8AFA300C942C0 /* Chameleon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Chameleon.h; sourceTree = "<group>"; };
+		616B72CB1FF8AFA300C942C0 /* Chameleon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Chameleon.m; sourceTree = "<group>"; };
+		616B72CE1FFC175A00C942C0 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
+		616B72D11FFC6DB300C942C0 /* ARSCNView+HPAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ARSCNView+HPAdditions.h"; sourceTree = "<group>"; };
+		616B72D21FFC6DB300C942C0 /* ARSCNView+HPAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ARSCNView+HPAdditions.m"; sourceTree = "<group>"; };
+		616B72D41FFC761300C942C0 /* UIImage+HPAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+HPAdditions.h"; sourceTree = "<group>"; };
+		616B72D51FFC761300C942C0 /* UIImage+HPAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+HPAdditions.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,12 +74,35 @@
 				616B72B61FF8AF3800C942C0 /* ViewController.h */,
 				616B72B71FF8AF3800C942C0 /* ViewController.m */,
 				616B72B91FF8AF3800C942C0 /* Main.storyboard */,
-				616B72BC1FF8AF3800C942C0 /* Assets.xcassets */,
 				616B72BE1FF8AF3800C942C0 /* LaunchScreen.storyboard */,
 				616B72C11FF8AF3800C942C0 /* Info.plist */,
 				616B72C21FF8AF3800C942C0 /* main.m */,
+				616B72CA1FF8AFA300C942C0 /* Chameleon.h */,
+				616B72CB1FF8AFA300C942C0 /* Chameleon.m */,
+				616B72D01FFC6C5600C942C0 /* Categories */,
+				616B72C91FF8AF6800C942C0 /* Resources */,
 			);
 			path = InteractiveContent;
+			sourceTree = "<group>";
+		};
+		616B72C91FF8AF6800C942C0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				616B72CE1FFC175A00C942C0 /* art.scnassets */,
+				616B72BC1FF8AF3800C942C0 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		616B72D01FFC6C5600C942C0 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				616B72D11FFC6DB300C942C0 /* ARSCNView+HPAdditions.h */,
+				616B72D21FFC6DB300C942C0 /* ARSCNView+HPAdditions.m */,
+				616B72D41FFC761300C942C0 /* UIImage+HPAdditions.h */,
+				616B72D51FFC761300C942C0 /* UIImage+HPAdditions.m */,
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -130,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				616B72C01FF8AF3800C942C0 /* LaunchScreen.storyboard in Resources */,
+				616B72CF1FFC175A00C942C0 /* art.scnassets in Resources */,
 				616B72BD1FF8AF3800C942C0 /* Assets.xcassets in Resources */,
 				616B72BB1FF8AF3800C942C0 /* Main.storyboard in Resources */,
 			);
@@ -144,6 +179,9 @@
 			files = (
 				616B72B81FF8AF3800C942C0 /* ViewController.m in Sources */,
 				616B72C31FF8AF3800C942C0 /* main.m in Sources */,
+				616B72CC1FF8AFA300C942C0 /* Chameleon.m in Sources */,
+				616B72D61FFC761300C942C0 /* UIImage+HPAdditions.m in Sources */,
+				616B72D31FFC6DB300C942C0 /* ARSCNView+HPAdditions.m in Sources */,
 				616B72B51FF8AF3800C942C0 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,7 +317,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4WS865GNZP;
+				DEVELOPMENT_TEAM = RDX7MBKEQ8;
 				INFOPLIST_FILE = InteractiveContent/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = hp.com.InteractiveContent;
@@ -293,7 +331,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4WS865GNZP;
+				DEVELOPMENT_TEAM = RDX7MBKEQ8;
 				INFOPLIST_FILE = InteractiveContent/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = hp.com.InteractiveContent;
