@@ -31,6 +31,9 @@ typedef NS_ENUM(NSInteger, MouthAnimationState) {
     pullingBackTongue
 };
 
+static NSString * const kRelativeCameraPostionToHead = @"kRelativeCameraPostionToHead";
+static NSString * const kDistance = @"kDistance";
+
 @interface Chameleon()
 
 //Special Nodes used to control animations of the model
@@ -173,19 +176,28 @@ typedef NS_ENUM(NSInteger, MouthAnimationState) {
 
 // PRAGMA MARK: - Turn left/right and idle animations
 - (void)preloadAnimation {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"anim_idle.dae" ofType:nil inDirectory:@"art.scnassets"];
-    NSURL *url = [[NSBundle mainBundle] URLForResource:@"anim_idle.dae"withExtension:nil subdirectory:@"art.scnassets"];
-    //self.idleAnimation = [SCNAnimation animationNamed:[[NSBundle mainBundle] pathForResource:@"anim_idle.dae" ofType:nil inDirectory:@"art.scnassets"]];
-    //self.idleAnimation = [SCNAnimation animationNamed:@"art.scnassets/anim_idle.dae"];
-    self.idleAnimation = [SCNAnimation animationWithContentsOfURL:url];
+    NSURL *url = [[NSBundle mainBundle] URLForResource:@"anim_idle.dae" withExtension:nil subdirectory:@"art.scnassets"];
+    SCNSceneSource *sceneSource = [SCNSceneSource sceneSourceWithURL:url options:nil];
+    CAAnimation *animationObject = [sceneSource entryWithIdentifier:@"unnamed_animation__8" withClass:CAAnimation.self];
+    self.idleAnimation = [SCNAnimation animationWithCAAnimation:animationObject];
     self.idleAnimation.repeatCount = -1;
     
-    self.turnLeftAnimation = [SCNAnimation animationNamed:[[NSBundle mainBundle] pathForResource:@"anim_turnleft.dae" ofType:nil inDirectory:@"art.scnassets"]];
+    
+    url = [[NSBundle mainBundle] URLForResource:@"anim_turnleft.dae" withExtension:nil subdirectory:@"art.scnassets"];
+    sceneSource = [SCNSceneSource sceneSourceWithURL:url options:nil];
+    animationObject = [sceneSource entryWithIdentifier:@"unnamed_animation__8" withClass:CAAnimation.self];
+    self.turnLeftAnimation = [SCNAnimation animationWithCAAnimation:animationObject];
+    
     self.turnLeftAnimation.repeatCount = 1;
     self.turnLeftAnimation.blendInDuration = 0.3;
     self.turnLeftAnimation.blendOutDuration = 0.3;
+
+    url = [[NSBundle mainBundle] URLForResource:@"anim_turnright.dae" withExtension:nil subdirectory:@"art.scnassets"];
+    sceneSource = [SCNSceneSource sceneSourceWithURL:url options:nil];
+    //NSArray<NSString *>*list = [sceneSource identifiersOfEntriesWithClass:CAAnimation.self];
+    animationObject = [sceneSource entryWithIdentifier:@"unnamed_animation__8" withClass:CAAnimation.self];
+    self.turnRightAnimation = [SCNAnimation animationWithCAAnimation:animationObject];
     
-    self.turnRightAnimation = [SCNAnimation animationNamed:[[NSBundle mainBundle] pathForResource:@"anim_turnright.dae" ofType:nil inDirectory:@"art.scnassets"]];
     self.turnRightAnimation.repeatCount = 1;
     self.turnRightAnimation.blendInDuration = 0.3;
     self.turnRightAnimation.blendOutDuration = 0.3;
@@ -395,6 +407,7 @@ typedef NS_ENUM(NSInteger, MouthAnimationState) {
 - (void)reactToRendering:(ARSCNView *)sceneView {
     // Update environment map to match ambient light level
     self.lightingEnvironment.intensity = sceneView.session.currentFrame.lightEstimate.ambientIntensity > 0 ? sceneView.session.currentFrame.lightEstimate.ambientIntensity / 100 : 1000 / 100;
+    
     SCNNode *pointOfView;
     if (self.modelLoaded && !self.chameleonIsTurning){
         pointOfView = sceneView.pointOfView;
@@ -408,11 +421,12 @@ typedef NS_ENUM(NSInteger, MouthAnimationState) {
     
     
     // Obtain relative position of the head to the camera and act accordingly.
-    RelativeCameraPositionToHead relativePos = [self relativePositionToHead:pointOfView.simdPosition];
+    NSDictionary *positions = [self relativePositionToHead:pointOfView.simdPosition];
+    //RelativeCameraPositionToHead relativePos = [self relativePositionToHead:pointOfView.simdPosition];
     
-    switch (relativePos) {
+    switch ([positions[kRelativeCameraPostionToHead] intValue]) {
         case withinFieldOfView:
-            [self handleWithinfieldOfView:localTarget distance:(Distance)relativePos];
+            [self handleWithinfieldOfView:localTarget distance:[positions[kDistance] intValue]];
             break;
             
         case needsToTurnLeft:
@@ -497,10 +511,9 @@ typedef NS_ENUM(NSInteger, MouthAnimationState) {
                 self.readyToShootCounter += 1;
                 if (self.readyToShootCounter > 30) {
                     [self openClosedMouthAndShootTongue];
-                } else {
-                    self.readyToShootCounter = 0;
                 }
-                
+            } else {
+                self.readyToShootCounter = 0;
             }
             
         default:
@@ -509,25 +522,26 @@ typedef NS_ENUM(NSInteger, MouthAnimationState) {
 }
 
 //PRAGMA MARK: - Head and tongue animations
-- (RelativeCameraPositionToHead)relativePositionToHead:(simd_float3)pointOfViewPosition {
+- (NSDictionary *)relativePositionToHead:(simd_float3)pointOfViewPosition {
     // Compute angles between camera position and chameleon
     simd_float3 cameraPosLocal = [self.head simdConvertPosition:pointOfViewPosition fromNode:nil];
     simd_float3 cameraPosLocalComponentX = simd_make_float3(cameraPosLocal.x, cameraPosLocal.y, cameraPosLocal.z);
     float dist = simd_length(cameraPosLocal - self.head.simdPosition);
     
-    float xAngle = acosf(simd_dot(self.head.simdPosition, simd_normalize(cameraPosLocalComponentX))) * 180 / M_PI;
-    float yAngle = asinf(cameraPosLocal.y / dist) * 180 / M_PI;
+    double xAngle = acos(simd_dot(simd_normalize(self.head.simdPosition), simd_normalize(cameraPosLocalComponentX))) * 180 / M_PI;
+    double yAngle = asin(cameraPosLocal.y / dist) * 180 / M_PI;
     
     float selfToUserDistance = simd_length(pointOfViewPosition - self.jaw.simdWorldPosition);
     
     RelativeCameraPositionToHead relativePosition;
+    Distance distanceCategory = outsideTargetLockDistance;
     
     if (yAngle > 60){
         relativePosition = tooHighOrLow;
     } else if (xAngle > 60) {
         relativePosition = cameraPosLocal.x < 0 ? needsToTurnLeft : needsToTurnRight;
     } else {
-        Distance distanceCategory;
+        
         
         if ( selfToUserDistance < 0.3) {
             distanceCategory = withinShootTongueDistance;
@@ -536,16 +550,16 @@ typedef NS_ENUM(NSInteger, MouthAnimationState) {
             if ( self.lastDistance > 0.45 || self.lastRelativePosition > 0) {
                 self.didEnterTargetLockDistance = YES;
             }
-        } else {
-            distanceCategory = outsideTargetLockDistance;
         }
+        
         relativePosition = withinFieldOfView;
         
     }
     
     self.lastDistance = selfToUserDistance;
     self.lastRelativePosition = relativePosition;
-    return relativePosition;
+    
+    return @{kRelativeCameraPostionToHead : @(relativePosition), kDistance : @(distanceCategory)};
 }
 
 - (void)openClosedMouthAndShootTongue {
