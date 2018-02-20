@@ -349,7 +349,7 @@ static NSString * const kDistance = @"kDistance";
 
 
 - (void)reactToInitialPlacement:(ARSCNView *)view {
-    [self reactToPlacement:view isInitial:NO];
+    [self reactToPlacement:view isInitial:YES];
 }
 
 
